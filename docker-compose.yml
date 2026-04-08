@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: alm
+      POSTGRES_PASSWORD: alm
+      POSTGRES_DB: banking_alm
+    ports:
+      - "5432:5432"
+    volumes:
+      - alm_pg_data:/var/lib/postgresql/data
+
+volumes:
+  alm_pg_data:
