@@ -27,22 +27,22 @@ export function DataTable<T>({
   const cellY = dense ? 'py-2' : 'py-3'
   if (data.length === 0) {
     return (
-      <div className="rounded-md border border-dashed border-slate-200 bg-slate-50/80 px-4 py-8 text-center text-sm text-slate-500">
+      <div className="rounded-sm border border-dashed border-slate-300/80 bg-slate-50/90 px-4 py-8 text-center text-sm text-slate-500">
         {emptyMessage}
       </div>
     )
   }
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200">
+    <div className="overflow-x-auto rounded-sm border border-slate-300/80">
       <table className="w-full min-w-[640px] border-collapse text-left text-sm">
         <thead>
-          <tr className="border-b border-slate-200 bg-slate-50">
+          <tr className="border-b border-slate-300/80 bg-slate-100/95">
             {columns.map((col) => (
               <th
                 key={col.key}
                 scope="col"
                 style={col.width ? { width: col.width } : undefined}
-                className={`px-4 ${cellY} text-xs font-semibold uppercase tracking-wide text-slate-600 ${
+                className={`px-4 ${cellY} text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 ${
                   col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
                 }`}
               >
@@ -51,9 +51,9 @@ export function DataTable<T>({
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 bg-white">
+        <tbody className="divide-y divide-slate-200/80 bg-white">
           {data.map((row, i) => (
-            <tr key={rowKey(row, i)} className="hover:bg-slate-50/80">
+            <tr key={rowKey(row, i)} className="hover:bg-slate-50/90">
               {columns.map((col) => {
                 const content = col.render
                   ? col.render(row)

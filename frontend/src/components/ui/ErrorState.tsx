@@ -8,7 +8,7 @@ type ErrorStateProps = {
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
     <div
-      className="flex flex-col items-center justify-center gap-4 rounded-lg border border-red-200 bg-red-50/60 p-8 text-center"
+      className="flex flex-col items-center justify-center gap-4 rounded-sm border border-red-200/90 bg-red-50/70 p-8 text-center shadow-[0_1px_2px_rgba(12,25,41,0.04)]"
       role="alert"
     >
       <AlertCircle className="h-10 w-10 text-red-700" aria-hidden />
@@ -17,7 +17,7 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
         <button
           type="button"
           onClick={onRetry}
-          className="rounded-md bg-white px-3 py-1.5 text-sm font-medium text-red-800 shadow-sm ring-1 ring-red-200 hover:bg-red-50"
+          className="rounded-sm border border-red-200 bg-white px-3 py-1.5 text-sm font-semibold text-red-900 shadow-sm hover:bg-red-50/80"
         >
           Retry
         </button>

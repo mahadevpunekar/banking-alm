@@ -49,7 +49,7 @@ export function DashboardQuickActionsMenu({
   }
 
   const item =
-    'flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-medium text-slate-800 hover:bg-slate-50'
+    'flex w-full items-center gap-2 px-3 py-2.5 text-left text-xs font-medium text-slate-800 transition-colors hover:bg-slate-100'
 
   return (
     <div className="relative" ref={rootRef}>
@@ -58,7 +58,7 @@ export function DashboardQuickActionsMenu({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
+        className="alm-btn-secondary"
       >
         <MoreHorizontal className="h-3.5 w-3.5 text-slate-500" aria-hidden />
         Quick actions
@@ -66,12 +66,12 @@ export function DashboardQuickActionsMenu({
       </button>
       {open ? (
         <div
-          className="absolute right-0 z-20 mt-1 w-56 rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+          className="absolute right-0 z-20 mt-1 w-56 rounded-sm border border-slate-300/90 bg-white py-1 shadow-[0_8px_24px_rgba(12,25,41,0.1)]"
           role="menu"
           aria-label="Quick actions"
         >
           <button type="button" role="menuitem" className={item} onClick={() => run(onRunScenario)}>
-            <Zap className="h-4 w-4 shrink-0 text-[#1E3A8A]" aria-hidden />
+            <Zap className="h-4 w-4 shrink-0 text-[#1e3a8a]" aria-hidden />
             Run scenario
           </button>
           <button type="button" role="menuitem" className={item} onClick={() => run(onExport)}>
@@ -79,7 +79,7 @@ export function DashboardQuickActionsMenu({
             Export report
           </button>
           <button type="button" role="menuitem" className={item} onClick={() => run(onDownloadSls)}>
-            <Download className="h-4 w-4 shrink-0 text-[#16A34A]" aria-hidden />
+            <Download className="h-4 w-4 shrink-0 text-[#15803d]" aria-hidden />
             Download SLS
           </button>
           <button type="button" role="menuitem" className={item} onClick={() => run(onShareAlco)}>

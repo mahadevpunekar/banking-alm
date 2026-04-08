@@ -5,7 +5,7 @@ export const chartColors = {
   secondary: '#64748b',
   positive: '#16A34A',
   negative: '#DC2626',
-  grid: '#e2e8f0',
+  grid: '#d1dae8',
   axis: '#64748b',
   before: '#94a3b8',
   after: '#1E3A8A',

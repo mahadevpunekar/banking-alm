@@ -66,31 +66,31 @@ export function TopExposuresTable({ data, onRowClick }: Props) {
             placeholder="Filter exposures…"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-full rounded-md border border-slate-200 py-2 pl-8 pr-3 text-sm text-slate-900 shadow-sm"
+            className="alm-field w-full py-2 pl-8 pr-3"
           />
         </label>
         <p className="text-xs text-slate-500">{filteredSorted.length} row(s)</p>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-slate-200">
+      <div className="overflow-x-auto rounded-sm border border-slate-300/80">
         <table className="w-full min-w-[720px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b border-slate-300/80 bg-slate-100/95">
               <th className="px-3 py-3">
                 <button
                   type="button"
-                  className="text-xs font-semibold uppercase tracking-wide text-slate-600 hover:text-[#1E3A8A]"
+                  className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 hover:text-[#1e3a8a]"
                   onClick={() => toggleSort('name')}
                 >
                   Exposure {sortGlyph('name', sortKey, sortDir)}
                 </button>
               </th>
-              <th className="px-3 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <th className="px-3 py-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600">
                 Segment
               </th>
               <th className="px-3 py-3">
                 <button
                   type="button"
-                  className="text-xs font-semibold uppercase tracking-wide text-slate-600 hover:text-[#1E3A8A]"
+                  className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 hover:text-[#1e3a8a]"
                   onClick={() => toggleSort('riskRating')}
                 >
                   Risk rating {sortGlyph('riskRating', sortKey, sortDir)}
@@ -99,7 +99,7 @@ export function TopExposuresTable({ data, onRowClick }: Props) {
               <th className="px-3 py-3">
                 <button
                   type="button"
-                  className="text-xs font-semibold uppercase tracking-wide text-slate-600 hover:text-[#1E3A8A]"
+                  className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 hover:text-[#1e3a8a]"
                   onClick={() => toggleSort('maturityBucket')}
                 >
                   Maturity {sortGlyph('maturityBucket', sortKey, sortDir)}
@@ -108,7 +108,7 @@ export function TopExposuresTable({ data, onRowClick }: Props) {
               <th className="px-3 py-3 text-right">
                 <button
                   type="button"
-                  className="text-xs font-semibold uppercase tracking-wide text-slate-600 hover:text-[#1E3A8A]"
+                  className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 hover:text-[#1e3a8a]"
                   onClick={() => toggleSort('amountCr')}
                 >
                   Amount {sortGlyph('amountCr', sortKey, sortDir)}
@@ -117,7 +117,7 @@ export function TopExposuresTable({ data, onRowClick }: Props) {
               <th className="px-3 py-3 text-right">
                 <button
                   type="button"
-                  className="text-xs font-semibold uppercase tracking-wide text-slate-600 hover:text-[#1E3A8A]"
+                  className="text-[10px] font-semibold uppercase tracking-[0.08em] text-slate-600 hover:text-[#1e3a8a]"
                   onClick={() => toggleSort('sharePct')}
                 >
                   Share {sortGlyph('sharePct', sortKey, sortDir)}
@@ -125,16 +125,16 @@ export function TopExposuresTable({ data, onRowClick }: Props) {
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y divide-slate-200/80 bg-white">
             {filteredSorted.map((r, i) => (
               <tr
                 key={`${r.name}-${i}`}
-                className={`cursor-pointer transition hover:bg-slate-50 ${
-                  r.riskHighlight ? 'bg-amber-50/50' : ''
+                className={`cursor-pointer transition-colors hover:bg-slate-50/90 ${
+                  r.riskHighlight ? 'bg-amber-50/70' : ''
                 }`}
                 onClick={() => onRowClick(r)}
               >
-                <td className="px-3 py-2.5 font-medium text-slate-900">{r.name}</td>
+                <td className="px-3 py-2.5 font-medium text-[var(--color-alm-heading)]">{r.name}</td>
                 <td className="px-3 py-2.5 text-slate-600">{r.segment}</td>
                 <td className="px-3 py-2.5 tabular-nums text-slate-800">{r.riskRating ?? '—'}</td>
                 <td className="px-3 py-2.5 text-slate-600">{r.maturityBucket ?? '—'}</td>

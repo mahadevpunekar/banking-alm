@@ -38,12 +38,12 @@ export function LiquidityGapBarChart({ data, height = 320, onBarClick }: Props) 
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <span className="text-xs font-medium text-slate-600">View</span>
-        <div className="inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5 text-xs">
+        <div className="inline-flex rounded-sm border border-slate-300/80 bg-slate-100/80 p-0.5 text-xs">
           <button
             type="button"
             onClick={() => setView('bucket')}
-            className={`rounded px-2.5 py-1 font-medium ${
-              view === 'bucket' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-600'
+            className={`rounded-sm px-2.5 py-1 font-semibold ${
+              view === 'bucket' ? 'bg-white text-[#1e3a8a] shadow-sm' : 'text-slate-600'
             }`}
           >
             Bucket + cumulative
@@ -51,8 +51,8 @@ export function LiquidityGapBarChart({ data, height = 320, onBarClick }: Props) 
           <button
             type="button"
             onClick={() => setView('cumulative')}
-            className={`rounded px-2.5 py-1 font-medium ${
-              view === 'cumulative' ? 'bg-white text-[#1E3A8A] shadow-sm' : 'text-slate-600'
+            className={`rounded-sm px-2.5 py-1 font-semibold ${
+              view === 'cumulative' ? 'bg-white text-[#1e3a8a] shadow-sm' : 'text-slate-600'
             }`}
           >
             Cumulative only
