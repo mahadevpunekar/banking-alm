@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import assimilateLogo from '@/assets/assimilate_logo.png'
-import logoIcon from '@/assets/logo_icon.png'
 
 const nav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -44,7 +43,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           />
         ) : (
           <img
-            src={logoIcon}
+            src="/logo_icon.png"
             alt="Assimilate"
             className="mx-auto h-9 w-9 object-contain"
             width={36}
