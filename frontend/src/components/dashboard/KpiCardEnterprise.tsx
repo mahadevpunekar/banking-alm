@@ -57,7 +57,7 @@ export function KpiCardEnterprise({ label, value, hint, icon, ext, onClick }: Pr
           {icon ? <span className="text-slate-400">{icon}</span> : null}
         </div>
       </div>
-      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-slate-900 sm:text-[1.65rem]">
+      <p className="mt-2 min-w-0 text-xl font-semibold tabular-nums tracking-tight leading-tight text-slate-900 sm:text-[1.5rem] xl:whitespace-nowrap">
         {value}
       </p>
       <div className={`mt-1 flex items-center gap-1 text-xs font-semibold ${trendColor}`}>

@@ -15,7 +15,7 @@ export function KpiCard({ label, value, hint, trend, icon }: KpiCardProps) {
         <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
         {icon ? <span className="text-slate-400">{icon}</span> : null}
       </div>
-      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight text-slate-900 sm:text-[1.65rem]">
+      <p className="mt-2 min-w-0 text-xl font-semibold tabular-nums tracking-tight leading-tight text-slate-900 sm:text-[1.5rem] xl:whitespace-nowrap">
         {value}
       </p>
       {hint ? <p className="mt-1 text-xs text-slate-500">{hint}</p> : null}
