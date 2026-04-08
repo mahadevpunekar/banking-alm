@@ -1,4 +1,4 @@
-import { apiUrl } from './baseUrl'
+import { almClient } from './client'
 
 export type SourcesResponse = {
   supported_source_systems: string[]
@@ -47,65 +47,39 @@ export type ReconciliationSummary = {
   created_at: string
 }
 
-async function parseError(res: Response): Promise<string> {
-  try {
-    const j = (await res.json()) as { detail?: unknown }
-    if (typeof j.detail === 'string') return j.detail
-    if (Array.isArray(j.detail)) return JSON.stringify(j.detail)
-  } catch {
-    /* ignore */
-  }
-  return res.statusText || `HTTP ${res.status}`
-}
-
 export async function fetchSources(): Promise<SourcesResponse> {
-  const res = await fetch(apiUrl('/api/v1/data-integration/health/sources'))
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<SourcesResponse>
+  const { data } = await almClient.get<SourcesResponse>('/api/v1/data-integration/health/sources')
+  return data
 }
 
 export async function ingestBatch(body: BatchIngestRequest): Promise<BatchSummary> {
-  const res = await fetch(apiUrl('/api/v1/data-integration/ingest/batch'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<BatchSummary>
+  const { data } = await almClient.post<BatchSummary>('/api/v1/data-integration/ingest/batch', body)
+  return data
 }
 
 export async function validateBatch(batchId: string): Promise<BatchSummary> {
-  const res = await fetch(apiUrl(`/api/v1/data-integration/batches/${batchId}/validate`), {
-    method: 'POST',
-  })
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<BatchSummary>
+  const { data } = await almClient.post<BatchSummary>(
+    `/api/v1/data-integration/batches/${batchId}/validate`,
+  )
+  return data
 }
 
 export async function getBatch(batchId: string): Promise<BatchSummary> {
-  const res = await fetch(apiUrl(`/api/v1/data-integration/batches/${batchId}`))
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<BatchSummary>
+  const { data } = await almClient.get<BatchSummary>(`/api/v1/data-integration/batches/${batchId}`)
+  return data
 }
 
 export async function reconcileCbsGl(body: ReconciliationRequest): Promise<ReconciliationSummary> {
-  const res = await fetch(apiUrl('/api/v1/data-integration/reconcile/cbs-gl'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<ReconciliationSummary>
+  const { data } = await almClient.post<ReconciliationSummary>(
+    '/api/v1/data-integration/reconcile/cbs-gl',
+    body,
+  )
+  return data
 }
 
 export async function getReconcileRun(runId: string): Promise<ReconciliationSummary> {
-  const res = await fetch(apiUrl(`/api/v1/data-integration/reconcile/${runId}`))
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<ReconciliationSummary>
-}
-
-export async function fetchApiHealth(): Promise<{ status: string }> {
-  const res = await fetch(apiUrl('/health'))
-  if (!res.ok) throw new Error(await parseError(res))
-  return res.json() as Promise<{ status: string }>
+  const { data } = await almClient.get<ReconciliationSummary>(
+    `/api/v1/data-integration/reconcile/${runId}`,
+  )
+  return data
 }

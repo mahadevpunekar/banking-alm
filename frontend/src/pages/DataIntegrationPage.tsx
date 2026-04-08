@@ -19,7 +19,10 @@ import {
   type IngestRow,
   type ReconciliationSummary,
   type SourcesResponse,
-} from '../api/dataIntegration'
+} from '@/api/dataIntegration'
+import { chartColors } from '@/components/charts/chartTheme'
+import { Card } from '@/components/ui/Card'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 const defaultRowsJson = `[
   {
@@ -33,12 +36,13 @@ const defaultRowsJson = `[
   }
 ]`
 
-function statusClass(status: string): string {
+function pillClass(status: string): string {
   const s = status.toUpperCase()
-  if (s === 'VALIDATED' || s === 'MATCHED') return 'status-pill status-pill--ok'
-  if (s === 'FAILED' || s === 'VARIANCE') return 'status-pill status-pill--warn'
-  if (s === 'RECEIVED' || s === 'VALIDATING') return 'status-pill status-pill--pending'
-  return 'status-pill'
+  const base = 'inline-flex rounded-full px-2 py-0.5 text-xs font-semibold'
+  if (s === 'VALIDATED' || s === 'MATCHED') return `${base} bg-emerald-50 text-emerald-800`
+  if (s === 'FAILED' || s === 'VARIANCE') return `${base} bg-amber-50 text-amber-900`
+  if (s === 'RECEIVED' || s === 'VALIDATING') return `${base} bg-slate-100 text-slate-700`
+  return `${base} bg-slate-100 text-slate-800`
 }
 
 function chartFromReconciliation(summary: ReconciliationSummary | null) {
@@ -152,42 +156,53 @@ export function DataIntegrationPage() {
   const variances = recon?.summary?.variances as Record<string, unknown> | undefined
 
   return (
-    <div className="page">
-      <h1 className="page-title">Data integration</h1>
-      <p className="page-lead">
-        Ingest normalized staging data, run the rules engine, and compare CBS vs GL totals for a
-        business date.
-      </p>
+    <div>
+      <PageHeader
+        title="Data integration"
+        subtitle="Module 1: batch ingest, validation, and CBS vs GL reconciliation. Calls FastAPI when the service is running."
+      />
 
       {message ? (
-        <div className="banner" role="status">
+        <div
+          className="mb-4 rounded-md border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800"
+          role="status"
+        >
           {message}
         </div>
       ) : null}
 
-      <div className="stack">
-        <section className="panel">
-          <h2 className="panel-title">Batch ingest</h2>
-          <div className="form-grid">
-            <label className="field">
-              <span>Source system</span>
+      <div className="space-y-6">
+        <Card title="Batch ingest" description="Submit staging rows for validation.">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <label className="text-xs font-medium text-slate-600">
+              Source system
               <select
+                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-900"
                 value={sourceSystem}
                 onChange={(e) => setSourceSystem(e.target.value)}
                 disabled={busy}
               >
-                {(sources?.supported_source_systems ?? ['CBS', 'GL', 'LOAN_MANAGEMENT', 'DEPOSIT', 'TREASURY']).map(
-                  (s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ),
-                )}
+                {(sources?.supported_source_systems ?? [
+                  'CBS',
+                  'GL',
+                  'LOAN_MANAGEMENT',
+                  'DEPOSIT',
+                  'TREASURY',
+                ]).map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
             </label>
-            <label className="field">
-              <span>Mode</span>
-              <select value={mode} onChange={(e) => setMode(e.target.value)} disabled={busy}>
+            <label className="text-xs font-medium text-slate-600">
+              Mode
+              <select
+                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-900"
+                value={mode}
+                onChange={(e) => setMode(e.target.value)}
+                disabled={busy}
+              >
                 {(sources?.ingestion_modes ?? ['BATCH', 'REALTIME']).map((m) => (
                   <option key={m} value={m}>
                     {m}
@@ -195,158 +210,161 @@ export function DataIntegrationPage() {
                 ))}
               </select>
             </label>
-            <label className="field">
-              <span>Business date</span>
+            <label className="text-xs font-medium text-slate-600">
+              Business date
               <input
                 type="date"
+                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-900"
                 value={businessDate}
                 onChange={(e) => setBusinessDate(e.target.value)}
                 disabled={busy}
               />
             </label>
-            <label className="field field--wide">
-              <span>External batch ID (optional)</span>
+            <label className="text-xs font-medium text-slate-600">
+              External batch ID
               <input
                 type="text"
+                placeholder="Optional"
+                className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-900"
                 value={externalBatchId}
                 onChange={(e) => setExternalBatchId(e.target.value)}
-                placeholder="e.g. CBS-EOD-20260408"
                 disabled={busy}
               />
             </label>
-            <label className="field field--full">
-              <span>Rows (JSON array)</span>
-              <textarea
-                value={rowsJson}
-                onChange={(e) => setRowsJson(e.target.value)}
-                rows={12}
-                spellCheck={false}
-                disabled={busy}
-                className="code-input"
-              />
-            </label>
           </div>
-          <div className="actions">
-            <button type="button" className="button button--primary" disabled={busy} onClick={onIngest}>
-              {busy ? 'Working…' : 'Submit batch'}
-            </button>
-          </div>
-        </section>
+          <label className="mt-4 block text-xs font-medium text-slate-600">
+            Rows (JSON)
+            <textarea
+              value={rowsJson}
+              onChange={(e) => setRowsJson(e.target.value)}
+              rows={10}
+              spellCheck={false}
+              disabled={busy}
+              className="mt-1 w-full rounded-md border border-slate-200 px-3 py-2 font-mono text-xs text-slate-800"
+            />
+          </label>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={onIngest}
+            className="mt-4 rounded-md bg-blue-900 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 disabled:opacity-50"
+          >
+            {busy ? 'Working…' : 'Submit batch'}
+          </button>
+        </Card>
 
-        <section className="panel">
-          <h2 className="panel-title">Current batch</h2>
+        <Card title="Current batch">
           {!batch ? (
-            <p className="muted">Submit a batch to see status and validation.</p>
+            <p className="text-sm text-slate-500">Submit a batch to see status.</p>
           ) : (
-            <div className="batch-summary">
-              <dl className="kv">
+            <div className="space-y-4">
+              <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <div>
-                  <dt>ID</dt>
-                  <dd>
-                    <code>{batch.id}</code>
+                  <dt className="text-xs font-medium uppercase text-slate-500">ID</dt>
+                  <dd className="mt-1 font-mono text-xs text-slate-900">{batch.id}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium uppercase text-slate-500">Status</dt>
+                  <dd className="mt-1">
+                    <span className={pillClass(batch.status)}>{batch.status}</span>
                   </dd>
                 </div>
                 <div>
-                  <dt>Status</dt>
-                  <dd>
-                    <span className={statusClass(batch.status)}>{batch.status}</span>
-                  </dd>
+                  <dt className="text-xs font-medium uppercase text-slate-500">Rows</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{batch.row_count}</dd>
                 </div>
                 <div>
-                  <dt>Rows</dt>
-                  <dd>{batch.row_count}</dd>
-                </div>
-                <div>
-                  <dt>Source</dt>
-                  <dd>
+                  <dt className="text-xs font-medium uppercase text-slate-500">Source</dt>
+                  <dd className="mt-1 text-sm text-slate-900">
                     {batch.source_system} · {batch.mode}
                   </dd>
                 </div>
                 {batch.error_summary ? (
-                  <div className="kv--full">
-                    <dt>Error summary</dt>
-                    <dd className="text-error">{batch.error_summary}</dd>
+                  <div className="sm:col-span-2 lg:col-span-4">
+                    <dt className="text-xs font-medium uppercase text-slate-500">Error summary</dt>
+                    <dd className="mt-1 text-sm text-amber-900">{batch.error_summary}</dd>
                   </div>
                 ) : null}
               </dl>
-              <div className="actions">
-                <button type="button" className="button" disabled={busy} onClick={onValidate}>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={onValidate}
+                  className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 shadow-sm hover:bg-slate-50"
+                >
                   Run validation
                 </button>
-                <button type="button" className="button button--ghost" disabled={busy} onClick={onRefreshBatch}>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={onRefreshBatch}
+                  className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                >
                   Refresh
                 </button>
               </div>
             </div>
           )}
-        </section>
+        </Card>
 
-        <section className="panel">
-          <h2 className="panel-title">CBS vs GL reconciliation</h2>
-          <p className="muted small">
-            Aggregates validated staging rows by currency for <code>CBS</code> and <code>GL</code>{' '}
-            for the selected business date.
-          </p>
-          <div className="form-grid form-grid--inline">
-            <label className="field">
-              <span>Business date</span>
+        <Card
+          title="CBS vs GL reconciliation"
+          description="Aggregates validated staging by currency for the business date."
+        >
+          <div className="flex flex-wrap items-end gap-4">
+            <label className="text-xs font-medium text-slate-600">
+              Business date
               <input
                 type="date"
+                className="mt-1 block rounded-md border border-slate-200 px-3 py-2 text-sm"
                 value={reconDate}
                 onChange={(e) => setReconDate(e.target.value)}
                 disabled={busy}
               />
             </label>
-            <div className="actions actions--inline">
-              <button type="button" className="button button--primary" disabled={busy} onClick={onReconcile}>
-                Run reconciliation
-              </button>
-            </div>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onReconcile}
+              className="rounded-md bg-blue-900 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 disabled:opacity-50"
+            >
+              Run reconciliation
+            </button>
           </div>
-
           {recon ? (
-            <div className="recon-block">
-              <div className="recon-meta">
-                <span className={statusClass(recon.status)}>{recon.status}</span>
-                <span className="muted small">
-                  Run <code>{recon.id}</code>
+            <div className="mt-6 space-y-4">
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <span className={pillClass(recon.status)}>{recon.status}</span>
+                <span className="text-xs text-slate-500">
+                  Run <code className="rounded bg-slate-100 px-1">{recon.id}</code>
                 </span>
               </div>
               {variances && Object.keys(variances).length > 0 ? (
-                <div className="banner banner--warn">
-                  Variances by currency:{' '}
-                  <code>{Object.keys(variances).join(', ')}</code>
-                </div>
-              ) : recon.status === 'MATCHED' ? (
-                <p className="muted small">No currency variances for this date.</p>
+                <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                  Variances: <code>{Object.keys(variances).join(', ')}</code>
+                </p>
               ) : null}
-
               {chartData.length > 0 ? (
-                <div className="chart-wrap">
-                  <ResponsiveContainer width="100%" height={280}>
+                <div className="h-[280px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
-                      <XAxis dataKey="currency" tick={{ fill: 'var(--text-muted)' }} />
-                      <YAxis tick={{ fill: 'var(--text-muted)' }} />
-                      <Tooltip
-                        contentStyle={{
-                          background: 'var(--surface-elevated)',
-                          border: '1px solid var(--border)',
-                          borderRadius: 8,
-                        }}
-                      />
+                      <CartesianGrid stroke={chartColors.grid} strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="currency" tick={{ fontSize: 11, fill: chartColors.axis }} />
+                      <YAxis tick={{ fontSize: 11, fill: chartColors.axis }} />
+                      <Tooltip />
                       <Legend />
-                      <Bar dataKey="CBS" fill="var(--chart-cbs)" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="GL" fill="var(--chart-gl)" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="CBS" fill={chartColors.primary} radius={[2, 2, 0, 0]} />
+                      <Bar dataKey="GL" fill={chartColors.secondary} radius={[2, 2, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <p className="muted small">No validated CBS/GL rows for this date yet.</p>
+                <p className="text-sm text-slate-500">No validated CBS/GL data for this date.</p>
               )}
             </div>
           ) : null}
-        </section>
+        </Card>
       </div>
     </div>
   )
