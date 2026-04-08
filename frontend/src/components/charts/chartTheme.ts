@@ -1,12 +1,18 @@
-/** Recharts colors aligned with enterprise blue / grey palette */
+/** Recharts colors — banking enterprise palette */
 export const chartColors = {
-  primary: '#1e40af',
+  primary: '#1E3A8A',
   primaryMuted: '#93c5fd',
   secondary: '#64748b',
-  positive: '#0f766e',
-  negative: '#b45309',
+  positive: '#16A34A',
+  negative: '#DC2626',
   grid: '#e2e8f0',
   axis: '#64748b',
   before: '#94a3b8',
-  after: '#1d4ed8',
+  after: '#1E3A8A',
+} as const
+
+export const enterprisePalette = {
+  blue: '#1E3A8A',
+  green: '#16A34A',
+  red: '#DC2626',
 } as const

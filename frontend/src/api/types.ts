@@ -30,6 +30,49 @@ export interface ExposureRow {
   amountCr: number
   sharePct: number
   riskWeight?: string
+  riskRating?: string
+  maturityBucket?: string
+  riskHighlight?: boolean
+}
+
+export type AlertSeverity = 'critical' | 'warning' | 'normal'
+
+export interface DashboardAlert {
+  id: string
+  severity: AlertSeverity
+  message: string
+  detail?: string
+}
+
+export type LimitStatus = 'ok' | 'warning' | 'breach'
+
+export interface LimitVsActualRow {
+  metric: string
+  actual: number
+  limit: number
+  unit: 'Cr' | 'pct'
+  status: LimitStatus
+}
+
+export type KpiHealth = 'good' | 'risk' | 'breach'
+
+export interface KpiExtension {
+  trendPct: number
+  trendDirection: 'up' | 'down'
+  sparkline: number[]
+  health: KpiHealth
+}
+
+export interface DrillBreakdownRow {
+  product: string
+  region: string
+  counterparty: string
+  amountCr: number
+}
+
+export interface DashboardMeta {
+  lastUpdatedIso: string
+  dataSource: string
 }
 
 export interface DashboardResponse {
@@ -37,6 +80,11 @@ export interface DashboardResponse {
   liquidityGapByBucket: LiquidityGapBucketPoint[]
   rateSensitivity: RateSensitivityPoint[]
   topExposures: ExposureRow[]
+  alerts: DashboardAlert[]
+  limitsVsActual: LimitVsActualRow[]
+  kpiExtensions: Record<string, KpiExtension>
+  meta: DashboardMeta
+  drillDownSample: DrillBreakdownRow[]
 }
 
 export interface LiquidityBucketRow {

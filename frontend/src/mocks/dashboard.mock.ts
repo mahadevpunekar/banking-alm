@@ -1,5 +1,8 @@
 import type { DashboardResponse } from '@/api/types'
 
+const spark = (base: number, spread: number, n = 7) =>
+  Array.from({ length: n }, (_, i) => base + (i - n / 2) * spread * 0.15 + (i % 3) * spread * 0.02)
+
 export const dashboardMock: DashboardResponse = {
   kpis: {
     asOfDate: '2026-03-31',
@@ -32,11 +35,106 @@ export const dashboardMock: DashboardResponse = {
     { tenor: 'Y5', eveImpactCr: -1_280, niiImpactCr: 402 },
   ],
   topExposures: [
-    { name: 'Corporate term loans — AA & above', segment: 'Credit', amountCr: 42_180, sharePct: 22.9 },
-    { name: 'Retail housing — floating', segment: 'Retail', amountCr: 38_920, sharePct: 21.1 },
-    { name: 'Sovereign & SDL book', segment: 'Investments', amountCr: 29_450, sharePct: 16.0 },
-    { name: 'CASA & retail TD', segment: 'Deposits', amountCr: 24_100, sharePct: 13.1 },
-    { name: 'Wholesale borrowings — MTN', segment: 'Funding', amountCr: 18_760, sharePct: 10.2 },
-    { name: 'Agri & SME — priority', segment: 'Credit', amountCr: 12_330, sharePct: 6.7 },
+    {
+      name: 'Corporate term loans — AA & above',
+      segment: 'Credit',
+      amountCr: 42_180,
+      sharePct: 22.9,
+      riskRating: 'AA',
+      maturityBucket: '1–3Y',
+      riskHighlight: false,
+    },
+    {
+      name: 'Retail housing — floating',
+      segment: 'Retail',
+      amountCr: 38_920,
+      sharePct: 21.1,
+      riskRating: 'A',
+      maturityBucket: '3–5Y',
+      riskHighlight: false,
+    },
+    {
+      name: 'Sovereign & SDL book',
+      segment: 'Investments',
+      amountCr: 29_450,
+      sharePct: 16.0,
+      riskRating: 'AAA',
+      maturityBucket: '5Y+',
+      riskHighlight: false,
+    },
+    {
+      name: 'CASA & retail TD',
+      segment: 'Deposits',
+      amountCr: 24_100,
+      sharePct: 13.1,
+      riskRating: '—',
+      maturityBucket: '<1Y',
+      riskHighlight: false,
+    },
+    {
+      name: 'Wholesale borrowings — MTN',
+      segment: 'Funding',
+      amountCr: 18_760,
+      sharePct: 10.2,
+      riskRating: 'A+',
+      maturityBucket: '1–3Y',
+      riskHighlight: true,
+    },
+    {
+      name: 'Agri & SME — priority',
+      segment: 'Credit',
+      amountCr: 12_330,
+      sharePct: 6.7,
+      riskRating: 'BBB',
+      maturityBucket: '<1Y',
+      riskHighlight: true,
+    },
+  ],
+  alerts: [
+    {
+      id: 'a1',
+      severity: 'critical',
+      message: 'Liquidity gap breach in 1–7 days (Limit: −3,000 Cr | Actual: −3,200 Cr)',
+      detail: 'Structural cumulative gap vs ALCO limit — near-term buckets.',
+    },
+    {
+      id: 'a2',
+      severity: 'warning',
+      message: 'Overnight bucket remains short vs policy target (−12,450 Cr)',
+      detail: 'Review intraday liquidity buffer and HQLA deployment.',
+    },
+    {
+      id: 'a3',
+      severity: 'warning',
+      message: 'EVE sensitivity exceeds soft limit under +200 bps parallel shock',
+      detail: 'IRRBB desk review scheduled.',
+    },
+    {
+      id: 'a4',
+      severity: 'normal',
+      message: 'NSFR and LCR within board-approved ranges',
+    },
+  ],
+  limitsVsActual: [
+    { metric: 'Liquidity gap', actual: -4128.7, limit: -3000, unit: 'Cr', status: 'breach' },
+    { metric: 'EVE impact', actual: -890, limit: -950, unit: 'Cr', status: 'warning' },
+    { metric: 'NII impact', actual: 310, limit: 200, unit: 'Cr', status: 'ok' },
+  ],
+  kpiExtensions: {
+    assets: { trendPct: 4.2, trendDirection: 'up', sparkline: spark(184000, 800), health: 'good' },
+    liabilities: { trendPct: 3.8, trendDirection: 'up', sparkline: spark(171000, 600), health: 'good' },
+    liquidityGap: { trendPct: -1.4, trendDirection: 'down', sparkline: spark(-4000, 200), health: 'breach' },
+    nii: { trendPct: 6.2, trendDirection: 'up', sparkline: spark(3900, 80), health: 'good' },
+  },
+  meta: {
+    lastUpdatedIso: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
+    dataSource: 'CBS / Treasury',
+  },
+  drillDownSample: [
+    { product: 'Term loan — corporate', region: 'West', counterparty: 'Rated corp. pool', amountCr: 8_420 },
+    { product: 'Floating rate note', region: 'North', counterparty: 'Treasury desk', amountCr: 5_100 },
+    { product: 'SDL strip', region: 'All-India', counterparty: 'Sovereign', amountCr: 4_200 },
+    { product: 'Retail mortgage pool', region: 'South', counterparty: 'Retail aggr.', amountCr: 3_880 },
+    { product: 'CP / CD', region: 'Metro', counterparty: 'Money market', amountCr: 2_150 },
   ],
 }
